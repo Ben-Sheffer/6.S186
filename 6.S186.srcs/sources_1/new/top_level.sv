@@ -50,14 +50,14 @@ module top_level(
                        .do_out(adc_data), .daddr_in(adc_address),                       
                        .eos_out(eos_out));
     
-    ila_0 my_ila(.clk(clk_100mhz), .probe0(x), .probe1(y), .probe2(f), .probe3(eos_out), .probe4(adc_data), .probe5(adc_address), .probe6(delay));
-    
     logic f_saxis_tvalid, f_saxis_tready;
     logic f_maxis_tvalid;
     logic signed [31:0] f_out;
     force_fixed_to_float force_convert(.aclk(clk_100mhz),
                                        .s_axis_a_tdata(f), .s_axis_a_tready(f_saxis_tready), .s_axis_a_tvalid(f_saxis_tvalid),
                                        .m_axis_result_tdata(f_out), .m_axis_result_tready(1), .m_axis_result_tvalid(f_maxis_tvalid));
+    
+    ila_0 my_ila(.clk(clk_100mhz), .probe0(x), .probe1(y), .probe2(f_out), .probe3(eos_out), .probe4(adc_data), .probe5(adc_address), .probe6(delay));
     
     always_ff @(posedge clk_100mhz) begin
         if (eos_out) fresh_values <= 1;
